@@ -12,7 +12,7 @@ function ItemList({type, songs, limit, onTileClick, currentlyPlayingIndex}) {
   return (
       <div className='item-list'>
           {songs.slice(0, showMore ? songs.length : limit).map((song, index) => {
-              if (index === 0) return;
+              if (index === 0) return null;
               if (type === RESULT_TYPES.tracks) {
                 const trackDetails = {
                     title: song.name,
