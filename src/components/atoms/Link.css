@@ -6,7 +6,17 @@
     cursor: pointer;
 }
 
-.link:hover {
+.link.opaque {
+    opacity: 0.4;
+}
+
+
+.link.opaque:hover{
+    opacity: 1;
+    transition: 0.5s;
+}
+
+.link.dim:hover {
     color: #a4a4a4;
     transition: 0.5s;
 }

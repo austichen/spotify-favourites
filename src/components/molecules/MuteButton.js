@@ -9,16 +9,18 @@ const onMuteButtonClick = (isMuted, setIsMuted, onClick) => {
     setIsMuted(!isMuted)
 }
 
-function MuteButton({onClick}) {
+function MuteButton({onClick, hoverAction}) {
     const [isMuted, setIsMuted] = useState(false)
-    return <div className='mute-button'><Link onClick={() => onMuteButtonClick(isMuted, setIsMuted, onClick)}><FontAwesomeIcon icon={isMuted ? faVolumeMute : faVolumeUp}/></Link></div>
+    return <div className='mute-button'><Link onClick={() => onMuteButtonClick(isMuted, setIsMuted, onClick)} hoverAction={hoverAction}><FontAwesomeIcon icon={isMuted ? faVolumeMute : faVolumeUp}/></Link></div>
 }
 
 MuteButton.defaultProps = {
+    hoverAction: 'dim',
     onClick: () => {}
 }
 
 MuteButton.propTypes = {
+    hoverAction: PropTypes.oneOf(['dim', 'opaque']),
     onClick: PropTypes.func,
 }
 

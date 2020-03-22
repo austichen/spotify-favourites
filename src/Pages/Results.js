@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import ItemList from '../components/molecules/ItemList';
 import TopResult from '../components/molecules/TopResult';
 import MuteButton from '../components/molecules/MuteButton';
+import Footer from '../components/molecules/Footer';
 import Title from '../components/atoms/Title';
 
 import {SpotifyApiClient} from '../clients/spotifyApi'
@@ -73,7 +74,8 @@ function ResultsPage({accessToken}) {
                         <Title>Hey {usersName}. Your top {resultType} are...</Title>
                         <TopResult type={resultType} title={topTrack.name} topResultsLabelOnClick={changeSong} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name}) => name))} album={topTrack.album.name}/>
                         <ItemList type={resultType} songs={topTracks} onTileClick={changeSong} currentlyPlayingIndex={currentlyPlayingSongIndex}/>
-                        <MuteButton onClick={toggleMute}/>
+                        <Footer />
+                        <MuteButton hoverAction='opaque' onClick={toggleMute}/>
                     </Fragment>
                     )
                 }

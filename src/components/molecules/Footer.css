@@ -1,0 +1,8 @@
+.footer .link.opaque * {
+    opacity: 0.4;
+}
+
+.footer .link.opaque *:hover {
+    opacity: 1;
+    transition: 0.5s;
+}
