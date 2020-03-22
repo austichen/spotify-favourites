@@ -4,7 +4,7 @@ import './Login.css';
 
 const LOGIN_URL = 'https://accounts.spotify.com/authorize'
 const RESPONSE_TYPE = 'token'
-const REDIRECT_URI = 'http://localhost:3000/'
+const REDIRECT_URI = process.env.REACT_APP_ENV === 'prod' ? 'https://spotify-favourites.netlify.com/' : 'http://localhost:3000/'
 const SCOPE = 'user-top-read'
 
 function LoginPage() {
