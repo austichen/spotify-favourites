@@ -19,3 +19,9 @@
 .results-page > .item-list {
     margin-top: 50px;
 }
+
+.results-page > .mute-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}

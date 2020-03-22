@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 import ItemList from '../components/molecules/ItemList';
 import TopResult from '../components/molecules/TopResult';
+import MuteButton from '../components/molecules/MuteButton';
 import Title from '../components/atoms/Title';
 
 import {SpotifyApiClient} from '../clients/spotifyApi'
@@ -26,6 +27,10 @@ const changeSong = songIndex => {
     audioPlayer.play(songIndex)
 }
 
+const toggleMute = isMuted => {
+    isMuted ? audioPlayer.unmute() : audioPlayer.mute()
+}
+
 function ResultsPage({accessToken}) {
     const [topTracks, setTopTracks] = useState(null)
     const [topArtists, setTopArtists] = useState(null)
@@ -33,7 +38,6 @@ function ResultsPage({accessToken}) {
     const [resultTimeRange, setResultTimeRange] = useState(TIME_RANGES.medium_term)
     const [currentlyPlayingSongIndex, setCurrentlyPlayingSongIndex] = useState(null)
     
-    console.log(accessToken)
     useEffect(() => {
         const getResults = async spotifyClient => {
             const topTracksPromise = spotifyClient.getTopTracks({timeRange: TIME_RANGES.medium_term})
@@ -59,15 +63,13 @@ function ResultsPage({accessToken}) {
                     return <img src={logo} className="App-logo" alt="logo" />
                 } else {
                     const topTrack = topTracks[0]
-                    console.log(topTrack)
-                    console.log(`currently playing: ${currentlyPlayingSongIndex}`)
-                    console.log(topArtists[0])
                     return (
                     <Fragment>
                         <div className='results-page-background'></div>
                         <Title>Your top {resultType} are...</Title>
                         <TopResult type={resultType} title={topTrack.name} topResultsLabelOnClick={changeSong} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name}) => name))} album={topTrack.album.name}/>
                         <ItemList type={resultType} songs={topTracks} onTileClick={changeSong} currentlyPlayingIndex={currentlyPlayingSongIndex}/>
+                        <MuteButton onClick={toggleMute}/>
                     </Fragment>
                     )
                 }

@@ -41,8 +41,6 @@ export const getAverageImgColour = imgElem => {
     try {
         data = context.getImageData(0, 0, width, height);
     } catch (e) {
-    /* security error, img on diff domain */alert('x');
-        console.log(e)
         return defaultRGB;
     }
 
@@ -60,7 +58,6 @@ export const getAverageImgColour = imgElem => {
     rgb.g = ~~(rgb.g / count);
     rgb.b = ~~(rgb.b / count);
 
-    console.log(rgb)
 
     return rgb;
 }

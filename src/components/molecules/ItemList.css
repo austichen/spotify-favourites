@@ -2,3 +2,7 @@
     width: min(70%, 700px);
     margin-bottom: 50px;
 }
+
+.item-list .show-more-link {
+    margin-top: 40px;
+}

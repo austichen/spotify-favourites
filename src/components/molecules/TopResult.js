@@ -7,8 +7,6 @@ import TopResultLabel from './TopResultLabel'
 import './TopResult.css'
 
 const setBackgroundColor = topResultImage => {
-    console.log('onload called')
-
     const dataUrl = getImgDataUrl(topResultImage);
     const newImg = new Image()
     newImg.src = dataUrl

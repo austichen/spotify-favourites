@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import Link from '../atoms/Link'
-import './ShowMoreLink.css'
 
 const onLinkClick = (showLess, setShowLess, onClick) => {
     setShowLess(!showLess)
