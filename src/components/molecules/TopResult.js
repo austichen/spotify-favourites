@@ -23,7 +23,6 @@ const setBackgroundColor = topResultImage => {
 
 function TopResult({type, title, imgUrl, artist, album, topResultsLabelOnClick}) {
     useEffect(() => {
-        console.log('useEffect')
         const topResultImage = document.querySelector('.top-result .icon');
         if (topResultImage) {
             const img = new Image()
