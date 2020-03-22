@@ -25,10 +25,15 @@ const swing = p => {
     return 0.5 - Math.cos(p * Math.PI) / 2;
 }
 
-const fadeIn = player => {
-    player.volume = 0
-    player.play()
-    adjustVolume(player, 1.0)
+const fadeIn = (player, isMuted) => {
+    if (isMuted) {
+        player.muted = true
+        player.play()
+    } else {
+        player.volume = 0
+        player.play()
+        adjustVolume(player, 1.0)
+    }
 }
 
 
@@ -39,6 +44,7 @@ export class AudioPlayer {
         this.currentIndex = 0
         this.currentPlayer = null
         this.songChangeCallback = null
+        this.isMuted = false
     }
 
     play(index=this.currentIndex) {
@@ -50,7 +56,8 @@ export class AudioPlayer {
         if (this.songChangeCallback) {
             this.songChangeCallback(this.currentIndex)
         }
-        fadeIn(this.currentPlayer)
+        
+        fadeIn(this.currentPlayer, this.isMuted)
 
         this.currentPlayer.addEventListener('ended', () => {
             this.play((this.currentIndex + 1) % this.numTracks)
@@ -59,10 +66,12 @@ export class AudioPlayer {
 
     mute() {
         this.currentPlayer.muted = true;
+        this.isMuted = true
     }
 
     unmute() {
         this.currentPlayer.muted = false;
+        this.isMuted = false
     }
 
     updateTrackList(trackList) {
