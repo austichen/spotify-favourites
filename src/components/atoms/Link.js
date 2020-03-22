@@ -2,15 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import './Link.css'
 
-const linkStyle = {
-    fontWeight: 'light',
-    fontSize: '1rem',
-    textDecoration: 'none',
-    cursor: 'pointer'
-}
 
 function Link({url, onClick, children}) {
-  return <a className='link' href={url} onClick={onClick} style={linkStyle}>{children}</a>
+  return <a className='link' href={url} onClick={onClick}>{children}</a>
 }
 
 Link.defaultProps = {

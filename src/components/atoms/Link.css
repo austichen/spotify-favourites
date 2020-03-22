@@ -1,3 +1,11 @@
+.link {
+    font-weight: lighter;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #f4f4f4;
+    cursor: pointer;
+}
+
 .link:hover {
     color: #a4a4a4;
     transition: 0.5s;
