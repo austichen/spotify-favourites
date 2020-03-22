@@ -1,0 +1,21 @@
+.results-page .results-page-background {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    z-index: 0;
+}
+
+.results-page > .title {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.results-page .results-page-background ~ * {
+    z-index: 1;
+}
+
+.results-page > .item-list {
+    margin-top: 50px;
+}

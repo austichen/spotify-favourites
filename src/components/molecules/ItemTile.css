@@ -1,0 +1,22 @@
+.tile-info-section {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.tile-info-section > .sublabel {
+    padding-top: 5px;
+}
+
+.item-tile {
+    display: flex;
+    flex-direction: row;
+    margin: 5px 0;
+}
+
+.item-tile:hover, .item-tile.playing {
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: 0.25s;
+}

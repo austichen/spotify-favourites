@@ -1,0 +1,75 @@
+.top-result {
+    position: relative;
+    width: 700px;
+    height: 300px;
+}
+
+.top-result .number-one-label {
+    position: absolute;
+    left: 20px;
+    top: 60px;
+    font-size: 150px;
+    font-weight: bolder;
+    color: #ffd5d5;
+    z-index: 1;
+    margin: 0;
+}
+
+.top-result .icon {
+    position: absolute;
+    left: 200px;
+    z-index: 1;
+}
+
+.top-result .top-result-label {
+    position: absolute;
+    top: 200px;
+    left: 340px;
+    z-index: 2;
+}
+
+.top-result .top-result-background {
+    position: absolute;
+    top: 50px;
+    height: 200px;
+    width: 700px;
+    background-color: #fff;
+    opacity: 0.05;
+    z-index: 0;
+}
+
+
+.results-page-background.show-gradient {
+    background: linear-gradient(to bottom, var(--gradient-top), #282c34);
+    animation: fadein 2s linear forwards;
+}
+
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
