@@ -1,24 +1,28 @@
 import React from 'react';
-import {CLIENT_ID} from '../Utils/constants'
+import LoginButton from '../components/molecules/LoginButton'
+import Title from '../components/atoms/Title'
+import Icon from '../components/atoms/Icon'
 import './Login.css';
-
-const LOGIN_URL = 'https://accounts.spotify.com/authorize'
-const RESPONSE_TYPE = 'token'
-const REDIRECT_URI = process.env.REACT_APP_ENV === 'prod' ? 'https://spotify-favourites.netlify.com/' : 'http://localhost:3000/'
-const SCOPE = 'user-top-read'
 
 function LoginPage() {
   return (
     <div className='page login-page'>
-        <p>
-            Click below to login and view your Spotify stats.
-        </p>
-        <a
-          className="App-link"
-          href={encodeURI(`${LOGIN_URL}?client_id=${CLIENT_ID}&response_type=${RESPONSE_TYPE}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`)}
-        >
-          Login
-        </a>
+      <div className='content'>
+        <div className='main-text'>
+          <Title>Check your top artists and tracks, anytime.</Title>
+          <LoginButton />
+        </div>
+        <div className='album-covers'>
+          {/*LOVER*/}
+          <Icon size={250} url='https://i.scdn.co/image/ab67616d00001e02e787cffec20aa2a396a61647' />
+          {/*ASCEND*/}
+          <Icon size={250} url='https://i.scdn.co/image/ab67616d00001e02529c6fa82d23f65076c1579b' />
+          {/*STARBOY*/}
+          <Icon size={250} url='https://i.scdn.co/image/ab67616d00001e026ef66e4b651d7617f31a4725' />
+          {/*HEAD IN THE CLOUDS*/}
+          <Icon size={250} url='https://i.scdn.co/image/ab67616d00001e024aedbebc17bc6ebccad220e9' />
+        </div>
+      </div>
     </div>
   );
 }
