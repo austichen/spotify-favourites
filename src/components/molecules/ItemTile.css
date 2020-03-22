@@ -6,7 +6,11 @@
 }
 
 .tile-info-section > .sublabel {
-    padding-top: 5px;
+    padding-top: 7px;
+}
+
+.tile-info-section > .label {
+    padding-top: 4px;
 }
 
 .item-tile {
