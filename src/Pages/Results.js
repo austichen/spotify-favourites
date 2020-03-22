@@ -32,6 +32,7 @@ const toggleMute = isMuted => {
 }
 
 function ResultsPage({accessToken}) {
+    const [userInfo, setUserInfo] = useState(null)
     const [topTracks, setTopTracks] = useState(null)
     const [topArtists, setTopArtists] = useState(null)
     const [resultType, setResultType] = useState(RESULT_TYPES.tracks)
@@ -42,8 +43,10 @@ function ResultsPage({accessToken}) {
         const getResults = async spotifyClient => {
             const topTracksPromise = spotifyClient.getTopTracks({timeRange: TIME_RANGES.medium_term})
             const topArtistPromise = spotifyClient.getTopArtists({timeRange: TIME_RANGES.medium_term})
-            const [topTracksRes, topArtistsRes] = await Promise.all([topTracksPromise, topArtistPromise])
+            const userInfoPromise = spotifyClient.getUserInfo()
+            const [topTracksRes, topArtistsRes, userInfoRes] = await Promise.all([topTracksPromise, topArtistPromise, userInfoPromise])
             setTopTracks(topTracksRes.items)
+            setUserInfo(userInfoRes)
             audioPlayer = new AudioPlayer(topTracksRes.items.map(track => track.preview_url))
             audioPlayer.setSongChangeCallback(currentSongIndex => setCurrentlyPlayingSongIndex(currentSongIndex))
             audioPlayer.play(0)
@@ -59,14 +62,15 @@ function ResultsPage({accessToken}) {
     return (
       <div className='page results-page'>
             {(() => {
-                if (!topTracks || !topArtists) {
+                if (!topTracks || !topArtists || !userInfo) {
                     return <img src={logo} className="App-logo" alt="logo" />
                 } else {
                     const topTrack = topTracks[0]
+                    const usersName = userInfo.display_name.split(' ')[0]
                     return (
                     <Fragment>
                         <div className='results-page-background'></div>
-                        <Title>Your top {resultType} are...</Title>
+                        <Title>Hey {usersName}. Your top {resultType} are...</Title>
                         <TopResult type={resultType} title={topTrack.name} topResultsLabelOnClick={changeSong} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name}) => name))} album={topTrack.album.name}/>
                         <ItemList type={resultType} songs={topTracks} onTileClick={changeSong} currentlyPlayingIndex={currentlyPlayingSongIndex}/>
                         <MuteButton onClick={toggleMute}/>

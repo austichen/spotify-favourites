@@ -12,6 +12,10 @@ export class SpotifyApiClient {
         return jsonResponse
     }
 
+    async getUserInfo() {
+        return await this.makeRequest(`${this.BASE_API_URL}/me`)
+    }
+
     async getTopArtists(queryParams = {}) {
         const {limit, offset, timeRange} = queryParams
         let URL = `${this.BASE_API_URL}/me/top/artists?limit=${limit || 50}`
