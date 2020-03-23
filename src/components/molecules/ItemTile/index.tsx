@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Icon, Label, SubLabel} from '../../atoms'
-import {ResultsType, RESULT_TYPES, songIndexCallbackType} from '../../../Utils2/constants'
+import {ResultsType, RESULT_TYPES, songIndexCallbackType} from '../../../utils/constants'
 import './ItemTile.css'
 
 export interface Props {

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Modal from '../../molecules/Modal'
 import {Title, Label} from '../../atoms'
-import {IResultsSettings, RESULT_TYPES, TIME_RANGES} from '../../../Utils2/constants'
+import {IResultsSettings, RESULT_TYPES, TIME_RANGES} from '../../../utils/constants'
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';

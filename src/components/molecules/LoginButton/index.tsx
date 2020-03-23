@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from '../../atoms/Link'
-import {CLIENT_ID} from '../../../Utils2/constants'
+import {CLIENT_ID} from '../../../utils/constants'
 
 import './LoginButton.css'
 
