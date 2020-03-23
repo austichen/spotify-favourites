@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
-import {ResultsType, songIndexCallbackType} from '../../../utils/constants'
-import {getImgDataUrl, getAverageImgColour} from '../../../utils/helpers'
+import {ResultsType, songIndexCallbackType} from '../../../Utils2/constants'
+import {getImgDataUrl, getAverageImgColour} from '../../../Utils2/helpers'
 import Icon from '../../atoms/Icon'
 import Link from '../../atoms/Link'
 import TopResultLabel from '../TopResultLabel'

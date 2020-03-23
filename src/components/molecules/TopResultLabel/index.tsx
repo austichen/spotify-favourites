@@ -1,5 +1,5 @@
 import React from 'react';
-import {ResultsType, RESULT_TYPES, songIndexCallbackType} from '../../../utils/constants'
+import {ResultsType, RESULT_TYPES, songIndexCallbackType} from '../../../Utils2/constants'
 import SubLabel from '../../atoms/SubLabel'
 import './TopResultLabel.css'
 

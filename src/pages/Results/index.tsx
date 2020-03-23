@@ -5,8 +5,8 @@ import SettingsModal from '../../components/organisms/SettingsModal'
 import Title from '../../components/atoms/Title';
 import {SpotifyApiClient} from '../../clients/spotifyApi'
 import {AudioPlayer} from '../../clients/audioPlayer'
-import {arrayToComaSeparatedString} from '../../utils/helpers'
-import {RESULT_TYPES, TIME_RANGES, IResultsSettings} from '../../utils/constants'
+import {arrayToComaSeparatedString} from '../../Utils2/helpers'
+import {RESULT_TYPES, TIME_RANGES, IResultsSettings} from '../../Utils2/constants'
 import logo from '../../logo.svg';
 import './Results.css'
 

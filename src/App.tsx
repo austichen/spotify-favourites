@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { LoginPage, ResultsPage } from './pages';
-import {parseUrlHash} from './utils/helpers'
-import {TOKEN_LOCALSTORE_KEY} from './utils/constants'
+import {parseUrlHash} from './Utils2/helpers'
+import {TOKEN_LOCALSTORE_KEY} from './Utils2/constants'
 import './App.css';
 
 interface IAccessTokenInfo {
