@@ -10,7 +10,7 @@
     top: 60px;
     font-size: 150px;
     font-weight: bolder;
-    color: #ffd5d5;
+    color: #e4e4e4;
     z-index: 1;
     margin: 0;
 }
@@ -19,8 +19,15 @@
     position: absolute;
     left: 200px;
     z-index: 1;
-    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.363);
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.185);
 }
+
+.top-result .icon:hover {
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.363);
+    transition: 0.5s;
+    cursor: pointer;
+}
+
 
 .top-result .top-result-label {
     position: absolute;

@@ -104,14 +104,15 @@ const ResultsPage = ({accessToken} : Props) => {
                     return <img src={logo} className="App-logo" alt="logo" />
                 } else {
                     const {type, timeRange} = resultsSettings
-                    const topTrack = topTracks[timeRange][0]
+                    const topBannerIndex = audioStatus.currentSongIndex === -1 ? 0 : audioStatus.currentSongIndex
+                    const topTrack = topTracks[timeRange][topBannerIndex]
                     const usersName = userInfo.display_name.split(' ')[0]
                     return (
                     <Fragment>
                         <div className='results-page-background'></div>
                         <SettingsModal resultsSettings={resultsSettings} isOpen={showModal} onClose={handleModalClose} />
                         <Title>Hey {usersName}. Your top {type} are...</Title>
-                        <TopResult type={type} title={topTrack.name} topResultsLabelOnClick={changeSong} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name} : {name: string}) => name))} album={topTrack.album.name}/>
+                        <TopResult type={type} rank={topBannerIndex + 1} title={topTrack.name} spotifyUrl={topTrack.external_urls.spotify} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name} : {name: string}) => name))} album={topTrack.album.name}/>
                         <ItemList type={type} songs={topTracks[timeRange]} onTileClick={changeSong} currentlyPlayingIndex={audioStatus.currentSongIndex}/>
                         <div className="settings-area">
                             <SettingsIcon hoverAction='opaque' onClick={() => setShowModal(true)}/>

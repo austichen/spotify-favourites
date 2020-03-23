@@ -1,7 +1,6 @@
 .top-result-label {
     background: linear-gradient(to left, #282c34, rgba(0,0,0,0));
     padding: 10px 20px 10px 120px;
-    cursor: pointer;
 }
 
 .top-result-label .title {
