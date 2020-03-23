@@ -1,0 +1,15 @@
+.modal-content > .settings-modal {
+    width: min(600px, 100%);
+    color: #f4f4f4;
+    padding: 20px;
+}
+
+.modal-content > .settings-modal .label {
+    margin-top: 50px !important;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.MuiFormControlLabel-label.Mui-disabled {
+    color: #a4a4a4 !important;
+}

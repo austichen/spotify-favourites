@@ -45,13 +45,13 @@ export class AudioPlayer {
     songChangeCallback : ((currentIndex : number) => void) | null
     isMuted : boolean
 
-    constructor(trackList : string[]) {
+    constructor(trackList : string[], isMuted : boolean = false) {
         this.trackList = trackList
         this.numTracks = trackList.length
         this.currentIndex = 0
         this.currentPlayer = null
         this.songChangeCallback = null
-        this.isMuted = false
+        this.isMuted = isMuted
     }
 
     play(index : number =this.currentIndex) {

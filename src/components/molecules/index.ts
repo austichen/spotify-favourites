@@ -14,3 +14,7 @@ export { default as ShowMoreLink} from "./ShowMoreLink";
 export { default as TopResult} from "./TopResult";
 
 export { default as TopResultLabel} from "./TopResultLabel";
+
+export { default as SettingsIcon} from "./SettingsIcon";
+
+export { default as Modal} from "./Modal";

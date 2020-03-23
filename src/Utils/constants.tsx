@@ -6,6 +6,17 @@ export enum RESULT_TYPES {
     artists = 'artists'
 }
 
+export enum TIME_RANGES {
+    short_term = 'short_term',
+    medium_term = 'medium_term',
+    long_term = 'long_term'
+}
+
 export type ResultsType = RESULT_TYPES
 
 export type songIndexCallbackType = (songIndex : number) => void
+
+export interface IResultsSettings {
+    type: ResultsType
+    timeRange: TIME_RANGES
+}

@@ -1,23 +1,17 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faVolumeMute, faVolumeUp } from '@fortawesome/free-solid-svg-icons'
 import Link from '../../atoms/Link'
 
-type MuteButtonCallbackType = (isMuted : boolean) => void
-
 export interface Props {
+    isMuted: boolean
     hoverAction?: 'dim' | 'opaque'
-    onClick?: MuteButtonCallbackType
+    onClick?: () => void
 }
 
-const onMuteButtonClick = (isMuted : boolean, setIsMuted : any, onClick : MuteButtonCallbackType) => {
-    onClick(isMuted)
-    setIsMuted(!isMuted)
-}
 
-const MuteButton = ({onClick = () => {}, hoverAction = 'dim'} : Props) => {
-    const [isMuted, setIsMuted] = useState<boolean>(false)
-    return <div className='mute-button'><Link onClick={() => onMuteButtonClick(isMuted, setIsMuted, onClick)} hoverAction={hoverAction}><FontAwesomeIcon icon={isMuted ? faVolumeMute : faVolumeUp}/></Link></div>
+const MuteButton = ({isMuted, onClick = () => {}, hoverAction = 'dim'} : Props) => {
+    return <div className='mute-button'><Link onClick={onClick} hoverAction={hoverAction}><FontAwesomeIcon icon={isMuted ? faVolumeMute : faVolumeUp}/></Link></div>
 }
 
 export default MuteButton;

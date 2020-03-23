@@ -20,8 +20,14 @@
     margin-top: 50px;
 }
 
-.results-page > .mute-button {
+.results-page > .settings-area {
+    display: flex;
+    flex-direction: row;
     position: fixed;
     bottom: 20px;
     right: 20px;
+}
+
+.results-page > .settings-area > * {
+    padding: 0 5px;
 }
