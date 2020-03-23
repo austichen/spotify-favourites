@@ -1,10 +1,7 @@
 
 import React, {useState, useEffect, Fragment} from 'react';
-
-
 import {ItemList, TopResult, MuteButton, Footer} from '../../components/molecules'
 import Title from '../../components/atoms/Title';
-
 import {SpotifyApiClient} from '../../clients/spotifyApi'
 import {AudioPlayer} from '../../clients/audioPlayer'
 import {arrayToComaSeparatedString} from '../../utils/helpers'
@@ -16,11 +13,15 @@ interface Props {
     accessToken: string
 }
 
+interface IResultsInfo {
+    type: ResultsType,
+    timeRange: TIME_RANGES
+}
 
-const TIME_RANGES = {
-    short_term: 'short_term',
-    medium_term: 'medium_term',
-    long_term: 'long_term'
+enum TIME_RANGES {
+    short_term = 'short_term',
+    medium_term = 'medium_term',
+    long_term = 'long_term'
 }
 
 let audioPlayer : AudioPlayer;
@@ -37,8 +38,7 @@ const ResultsPage = ({accessToken} : Props) => {
     const [userInfo, setUserInfo] = useState<any | null>(null)
     const [topTracks, setTopTracks] = useState<any | null>(null)
     const [topArtists, setTopArtists] = useState<any | null>(null)
-    const [resultType, setResultType] = useState<ResultsType>(RESULT_TYPES.tracks)
-    const [resultTimeRange, setResultTimeRange] = useState<any | null>(TIME_RANGES.medium_term)
+    const [resultsInfo, setResultsInfo] = useState<IResultsInfo>({type: RESULT_TYPES.tracks, timeRange: TIME_RANGES.medium_term})
     const [currentlyPlayingSongIndex, setCurrentlyPlayingSongIndex] = useState<any | null>(null)
     
     useEffect(() => {
@@ -59,6 +59,8 @@ const ResultsPage = ({accessToken} : Props) => {
         getResults(spotifyClient)
 
     }, [accessToken])
+
+    const {type} = resultsInfo
     
     return (
       <div className='page results-page'>
@@ -71,9 +73,9 @@ const ResultsPage = ({accessToken} : Props) => {
                     return (
                     <Fragment>
                         <div className='results-page-background'></div>
-                        <Title>Hey {usersName}. Your top {resultType} are...</Title>
-                        <TopResult type={resultType} title={topTrack.name} topResultsLabelOnClick={changeSong} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name} : {name: string}) => name))} album={topTrack.album.name}/>
-                        <ItemList type={resultType} songs={topTracks} onTileClick={changeSong} currentlyPlayingIndex={currentlyPlayingSongIndex}/>
+                        <Title>Hey {usersName}. Your top {type} are...</Title>
+                        <TopResult type={type} title={topTrack.name} topResultsLabelOnClick={changeSong} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name} : {name: string}) => name))} album={topTrack.album.name}/>
+                        <ItemList type={type} songs={topTracks} onTileClick={changeSong} currentlyPlayingIndex={currentlyPlayingSongIndex}/>
                         <Footer />
                         <MuteButton hoverAction='opaque' onClick={toggleMute}/>
                     </Fragment>

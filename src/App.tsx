@@ -1,10 +1,8 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import { LoginPage, ResultsPage } from './pages';
 import {parseUrlHash} from './utils/helpers'
 import {TOKEN_LOCALSTORE_KEY} from './utils/constants'
 import './App.css';
-
-const {useState, useEffect} = React;
 
 interface IAccessTokenInfo {
   accessToken: string,
