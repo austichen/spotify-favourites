@@ -1,7 +1,7 @@
 import React from 'react';
-import {ResultsType, RESULT_TYPES, songIndexCallbackType} from '../../Utils/constants'
+import {ResultsType, RESULT_TYPES, songIndexCallbackType} from '../../../utils/constants'
+import SubLabel from '../../atoms/SubLabel'
 import './TopResultLabel.css'
-import SubLabel from '../atoms/SubLabel'
 
 export interface Props {
     type : ResultsType,

@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
-
-import ShowMoreLink from './ShowMoreLink'
-import ItemTile from './ItemTile';
-import {ResultsType, RESULT_TYPES, songIndexCallbackType} from '../../Utils/constants'
-import {arrayToComaSeparatedString} from '../../Utils/helpers'
+import {ShowMoreLink, ItemTile} from '../index'
+import {ResultsType, RESULT_TYPES, songIndexCallbackType} from '../../../utils/constants'
+import {arrayToComaSeparatedString} from '../../../utils/helpers'
 import './ItemList.css'
 
 export interface Props {

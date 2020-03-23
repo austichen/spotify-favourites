@@ -1,20 +1,18 @@
 
 import React, {useState, useEffect, Fragment} from 'react';
 
-import ItemList from '../components/molecules/ItemList';
-import TopResult from '../components/molecules/TopResult';
-import MuteButton from '../components/molecules/MuteButton';
-import Footer from '../components/molecules/Footer';
-import Title from '../components/atoms/Title';
 
-import {SpotifyApiClient} from '../clients/spotifyApi'
-import {AudioPlayer} from '../clients/audioPlayer'
-import {arrayToComaSeparatedString} from '../Utils/helpers'
-import {ResultsType, RESULT_TYPES} from '../Utils/constants'
-import logo from '../logo.svg';
+import {ItemList, TopResult, MuteButton, Footer} from '../../components/molecules'
+import Title from '../../components/atoms/Title';
+
+import {SpotifyApiClient} from '../../clients/spotifyApi'
+import {AudioPlayer} from '../../clients/audioPlayer'
+import {arrayToComaSeparatedString} from '../../utils/helpers'
+import {ResultsType, RESULT_TYPES} from '../../utils/constants'
+import logo from '../../logo.svg';
 import './Results.css'
 
-type ResultsPageProps = {
+interface Props {
     accessToken: string
 }
 
@@ -35,7 +33,7 @@ const toggleMute = (isMuted : boolean) => {
     isMuted ? audioPlayer.unmute() : audioPlayer.mute()
 }
 
-const ResultsPage : React.FC<ResultsPageProps> = ({accessToken}) => {
+const ResultsPage = ({accessToken} : Props) => {
     const [userInfo, setUserInfo] = useState<any | null>(null)
     const [topTracks, setTopTracks] = useState<any | null>(null)
     const [topArtists, setTopArtists] = useState<any | null>(null)

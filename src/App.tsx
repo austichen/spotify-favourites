@@ -1,8 +1,7 @@
 import * as React from 'react';
-import LoginPage from './Pages/Login';
-import ResultsPage from './Pages/Results';
-import {parseUrlHash} from './Utils/helpers'
-import {TOKEN_LOCALSTORE_KEY} from './Utils/constants'
+import { LoginPage, ResultsPage } from './pages';
+import {parseUrlHash} from './utils/helpers'
+import {TOKEN_LOCALSTORE_KEY} from './utils/constants'
 import './App.css';
 
 const {useState, useEffect} = React;

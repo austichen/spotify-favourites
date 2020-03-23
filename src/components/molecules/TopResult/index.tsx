@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
-import {ResultsType, songIndexCallbackType} from '../../Utils/constants'
-import {getImgDataUrl, getAverageImgColour} from '../../Utils/helpers'
-import Icon from '../atoms/Icon'
-import TopResultLabel from './TopResultLabel'
+import {ResultsType, songIndexCallbackType} from '../../../utils/constants'
+import {getImgDataUrl, getAverageImgColour} from '../../../utils/helpers'
+import Icon from '../../atoms/Icon'
+import TopResultLabel from '../TopResultLabel'
 import './TopResult.css'
 
 export interface Props {

@@ -1,6 +1,5 @@
 import React from 'react';
-import SubLabel from '../atoms/SubLabel'
-import Link from '../atoms/Link'
+import {SubLabel, Link} from '../../atoms'
 import './Footer.css'
 
 const footerStyle : React.CSSProperties = {

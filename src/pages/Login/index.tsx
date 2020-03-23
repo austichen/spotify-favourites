@@ -1,7 +1,6 @@
 import React from 'react';
-import LoginButton from '../components/molecules/LoginButton'
-import Title from '../components/atoms/Title'
-import Icon from '../components/atoms/Icon'
+import LoginButton from '../../components/molecules/LoginButton'
+import {Title, Icon} from '../../components/atoms'
 import './Login.css';
 
 const LoginPage = () => {
