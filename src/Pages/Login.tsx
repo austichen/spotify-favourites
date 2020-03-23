@@ -4,7 +4,7 @@ import Title from '../components/atoms/Title'
 import Icon from '../components/atoms/Icon'
 import './Login.css';
 
-function LoginPage() {
+const LoginPage = () => {
   return (
     <div className='page login-page'>
       <div className='content'>

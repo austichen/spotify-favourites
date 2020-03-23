@@ -3,12 +3,12 @@ import SubLabel from '../atoms/SubLabel'
 import Link from '../atoms/Link'
 import './Footer.css'
 
-const footerStyle = {
+const footerStyle : React.CSSProperties = {
     marginBottom: '20px'
 }
 
 
-function Footer() {
+const Footer = () => {
     return (
         <div className='footer' style={footerStyle}>
                 <Link url='https://github.com/austichen/spotify-favourites' hoverAction='opaque' newTab={true}>

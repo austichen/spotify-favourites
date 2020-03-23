@@ -11,7 +11,7 @@ const SCOPE = 'user-top-read'
 
 const loginUrl = encodeURI(`${LOGIN_URL_BASE}?client_id=${CLIENT_ID}&response_type=${RESPONSE_TYPE}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`)
 
-function LoginButton() {
+const LoginButton = () => {
   return <Link className='login-button' url={loginUrl}>Login</Link>
 }
 

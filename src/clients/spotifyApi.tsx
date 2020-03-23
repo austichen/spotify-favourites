@@ -1,12 +1,20 @@
 
 
+interface IPersonalizationQueryParams {
+    limit?: number
+    offset?: number
+    timeRange?:number
+}
+
 export class SpotifyApiClient {
-    constructor(accessToken) {
+    accessToken : string
+    BASE_API_URL : string
+    constructor(accessToken : string) {
         this.accessToken = accessToken;
         this.BASE_API_URL = 'https://api.spotify.com/v1'
     }
 
-    async makeRequest(url) {
+    async makeRequest(url : string) {
         const res = await fetch(url, {headers: {Authorization : `Bearer ${this.accessToken}`}})
         const jsonResponse = await res.json()
         return jsonResponse
@@ -17,7 +25,7 @@ export class SpotifyApiClient {
     }
 
     async getTopArtists(queryParams = {}) {
-        const {limit, offset, timeRange} = queryParams
+        const {limit, offset, timeRange} : IPersonalizationQueryParams= queryParams
         let URL = `${this.BASE_API_URL}/me/top/artists?limit=${limit || 50}`
         if (offset) {
             URL += `&offset=${offset}`
@@ -30,7 +38,7 @@ export class SpotifyApiClient {
     }
 
     async getTopTracks(queryParams = {}) {
-        const {limit, offset, timeRange} = queryParams
+        const {limit, offset, timeRange} : IPersonalizationQueryParams= queryParams
         let URL = `${this.BASE_API_URL}/me/top/tracks?limit=${limit || 50}`
         if (offset) {
             URL += `&offset=${offset}`

@@ -1,5 +1,5 @@
 // https://stackoverflow.com/questions/7451508/html5-audio-playback-with-fade-in-and-fade-out
-const adjustVolume = async (element,newVolume,{duration = 1000,easing = swing,interval = 13} = {}) => {
+const adjustVolume = async (element : HTMLAudioElement ,newVolume : number,{duration = 1000,easing = swing,interval = 13} = {}) => {
     const originalVolume = element.volume;
     const delta = newVolume - originalVolume;
     if (!delta || !duration || !easing || !interval) {
@@ -21,11 +21,11 @@ const adjustVolume = async (element,newVolume,{duration = 1000,easing = swing,in
     });
 }
 
-const swing = p => {
+const swing = (p : number) => {
     return 0.5 - Math.cos(p * Math.PI) / 2;
 }
 
-const fadeIn = (player, isMuted) => {
+const fadeIn = (player : HTMLAudioElement, isMuted : boolean) => {
     if (isMuted) {
         player.muted = true
         player.play()
@@ -38,7 +38,14 @@ const fadeIn = (player, isMuted) => {
 
 
 export class AudioPlayer {
-    constructor(trackList) {
+    trackList : string[]
+    numTracks : number
+    currentIndex : number
+    currentPlayer : HTMLAudioElement | null
+    songChangeCallback : ((currentIndex : number) => void) | null
+    isMuted : boolean
+
+    constructor(trackList : string[]) {
         this.trackList = trackList
         this.numTracks = trackList.length
         this.currentIndex = 0
@@ -47,7 +54,7 @@ export class AudioPlayer {
         this.isMuted = false
     }
 
-    play(index=this.currentIndex) {
+    play(index : number =this.currentIndex) {
         this.currentIndex = index
         if (this.currentPlayer && !this.currentPlayer.ended) {
             this.currentPlayer.pause()
@@ -65,16 +72,18 @@ export class AudioPlayer {
     }
 
     mute() {
+        if (this.currentPlayer === null) return;
         this.currentPlayer.muted = true;
         this.isMuted = true
     }
 
     unmute() {
+        if (this.currentPlayer === null) return;
         this.currentPlayer.muted = false;
         this.isMuted = false
     }
 
-    updateTrackList(trackList) {
+    updateTrackList(trackList : string[]) {
         if (this.currentPlayer) {
             this.currentPlayer.pause()
             this.currentPlayer = null;
@@ -84,7 +93,7 @@ export class AudioPlayer {
         this.numTracks = this.trackList.length
     }
 
-    setSongChangeCallback(callback) {
+    setSongChangeCallback(callback : (currentIndex : number) => void) {
         this.songChangeCallback = callback
     }
 

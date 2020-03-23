@@ -1,12 +1,20 @@
 import React, {useEffect} from 'react';
-import PropTypes from 'prop-types'
-import {RESULT_TYPES} from '../../Utils/constants'
+import {ResultsType, songIndexCallbackType} from '../../Utils/constants'
 import {getImgDataUrl, getAverageImgColour} from '../../Utils/helpers'
 import Icon from '../atoms/Icon'
 import TopResultLabel from './TopResultLabel'
 import './TopResult.css'
 
-const setBackgroundColor = topResultImage => {
+export interface Props {
+    type: ResultsType
+    title: string
+    imgUrl: string
+    artist?: string
+    album?: string
+    topResultsLabelOnClick: songIndexCallbackType
+}
+
+const setBackgroundColor = (topResultImage : HTMLImageElement) => {
     const dataUrl = getImgDataUrl(topResultImage);
     const newImg = new Image()
     newImg.src = dataUrl
@@ -14,12 +22,13 @@ const setBackgroundColor = topResultImage => {
         const {r, g, b} = getAverageImgColour(topResultImage);
         const root = document.documentElement;
         const backgroundGradient = document.querySelector('.results-page-background')
+        if (backgroundGradient === null) return;
         root.style.setProperty('--gradient-top', `rgb(${r}, ${g}, ${b})`)
         backgroundGradient.classList.add('show-gradient')
     }
 }
 
-function TopResult({type, title, imgUrl, artist, album, topResultsLabelOnClick}) {
+const TopResult = ({type, title, imgUrl, artist, album, topResultsLabelOnClick = () => {}} : Props) => {
     useEffect(() => {
         const topResultImage = document.querySelector('.top-result .icon');
         if (topResultImage) {
@@ -35,19 +44,10 @@ function TopResult({type, title, imgUrl, artist, album, topResultsLabelOnClick})
       <div className='top-result'>
           <h1 className='number-one-label'>1.</h1>
           <Icon url={imgUrl} size={300}/>
-          <TopResultLabel className='top-result-label' type={type} title={title} artist={artist} album={album} onClick={topResultsLabelOnClick} />
+          <TopResultLabel  type={type} title={title} artist={artist} album={album} onClick={topResultsLabelOnClick} />
           <div className='top-result-background'></div>
       </div>
   )
-}
-
-TopResult.propTypes = {
-    type: PropTypes.oneOf(Object.keys(RESULT_TYPES)).isRequired,
-    title: PropTypes.string.isRequired,
-    imgUrl: PropTypes.string.isRequired,
-    artist: PropTypes.string,
-    album: PropTypes.string,
-    topResultsLabelOnClick: PropTypes.func
 }
 
 export default TopResult;

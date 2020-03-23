@@ -1,17 +1,20 @@
-export const parseUrlHash = urlHash => {
-    const params = {}
-    urlHash.substring(1).split('&').forEach(param => {
+export const parseUrlHash = (urlHash : string) => {
+    const params : any = {}
+    urlHash.substring(1).split('&').forEach((param: string) => {
         const [key, value] = param.split('=')
         params[key] = value
     })
     return params
 }
 
-export const arrayToComaSeparatedString = arr => arr.reduce((ret, str) => `${ret}${str}, `, '').slice(0, -2)
+export const arrayToComaSeparatedString = (arr: string[]):string => arr.reduce((ret, str) => `${ret}${str}, `, '').slice(0, -2)
 
-export const getImgDataUrl = imgElem => {
-    const canvas = document.createElement('canvas')
+export const getImgDataUrl = (imgElem : HTMLImageElement):string => {
+    const canvas : HTMLCanvasElement = document.createElement('canvas')
     const context = canvas.getContext && canvas.getContext('2d')
+    if (context === null) {
+        throw new Error('Unable to grab canvas context')
+    }
     canvas.height = imgElem.height;
     canvas.width = imgElem.width;
     context.drawImage(imgElem, 0, 0);
@@ -20,8 +23,8 @@ export const getImgDataUrl = imgElem => {
 }
 
 // https://stackoverflow.com/questions/2541481/get-average-color-of-image-via-javascript
-export const getAverageImgColour = imgElem => {
-    let blockSize = 5, // only visit every 5 pixels
+export const getAverageImgColour = (imgElem: HTMLImageElement) => {
+    let blockSize : number = 5, // only visit every 5 pixels
         defaultRGB = { r: 0, g: 0, b: 0 }, // for non-supporting envs
         canvas = document.createElement('canvas'),
         context = canvas.getContext && canvas.getContext('2d'),

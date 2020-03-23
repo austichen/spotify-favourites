@@ -1,6 +1,5 @@
 
 import React, {useState, useEffect, Fragment} from 'react';
-import PropTypes from 'prop-types'
 
 import ItemList from '../components/molecules/ItemList';
 import TopResult from '../components/molecules/TopResult';
@@ -11,9 +10,13 @@ import Title from '../components/atoms/Title';
 import {SpotifyApiClient} from '../clients/spotifyApi'
 import {AudioPlayer} from '../clients/audioPlayer'
 import {arrayToComaSeparatedString} from '../Utils/helpers'
-import {RESULT_TYPES} from '../Utils/constants'
+import {ResultsType, RESULT_TYPES} from '../Utils/constants'
 import logo from '../logo.svg';
 import './Results.css'
+
+type ResultsPageProps = {
+    accessToken: string
+}
 
 
 const TIME_RANGES = {
@@ -22,42 +25,41 @@ const TIME_RANGES = {
     long_term: 'long_term'
 }
 
-let audioPlayer;
+let audioPlayer : AudioPlayer;
 
-const changeSong = songIndex => {
+const changeSong = (songIndex : number) => {
     audioPlayer.play(songIndex)
 }
 
-const toggleMute = isMuted => {
+const toggleMute = (isMuted : boolean) => {
     isMuted ? audioPlayer.unmute() : audioPlayer.mute()
 }
 
-function ResultsPage({accessToken}) {
-    const [userInfo, setUserInfo] = useState(null)
-    const [topTracks, setTopTracks] = useState(null)
-    const [topArtists, setTopArtists] = useState(null)
-    const [resultType, setResultType] = useState(RESULT_TYPES.tracks)
-    const [resultTimeRange, setResultTimeRange] = useState(TIME_RANGES.medium_term)
-    const [currentlyPlayingSongIndex, setCurrentlyPlayingSongIndex] = useState(null)
+const ResultsPage : React.FC<ResultsPageProps> = ({accessToken}) => {
+    const [userInfo, setUserInfo] = useState<any | null>(null)
+    const [topTracks, setTopTracks] = useState<any | null>(null)
+    const [topArtists, setTopArtists] = useState<any | null>(null)
+    const [resultType, setResultType] = useState<ResultsType>(RESULT_TYPES.tracks)
+    const [resultTimeRange, setResultTimeRange] = useState<any | null>(TIME_RANGES.medium_term)
+    const [currentlyPlayingSongIndex, setCurrentlyPlayingSongIndex] = useState<any | null>(null)
     
     useEffect(() => {
-        const getResults = async spotifyClient => {
+        const getResults = async (spotifyClient: SpotifyApiClient) => {
             const topTracksPromise = spotifyClient.getTopTracks({timeRange: TIME_RANGES.medium_term})
             const topArtistPromise = spotifyClient.getTopArtists({timeRange: TIME_RANGES.medium_term})
             const userInfoPromise = spotifyClient.getUserInfo()
             const [topTracksRes, topArtistsRes, userInfoRes] = await Promise.all([topTracksPromise, topArtistPromise, userInfoPromise])
             setTopTracks(topTracksRes.items)
             setUserInfo(userInfoRes)
-            audioPlayer = new AudioPlayer(topTracksRes.items.map(track => track.preview_url))
-            audioPlayer.setSongChangeCallback(currentSongIndex => setCurrentlyPlayingSongIndex(currentSongIndex))
+            audioPlayer = new AudioPlayer(topTracksRes.items.map(({preview_url} : {preview_url : string}) => preview_url))
+            audioPlayer.setSongChangeCallback((currentSongIndex : number) => setCurrentlyPlayingSongIndex(currentSongIndex))
             audioPlayer.play(0)
             setTopArtists(topArtistsRes.items)
         }
         
-        if (accessToken) {
-            const spotifyClient = new SpotifyApiClient(accessToken)
-            getResults(spotifyClient)
-        }
+        const spotifyClient = new SpotifyApiClient(accessToken)
+        getResults(spotifyClient)
+
     }, [accessToken])
     
     return (
@@ -72,7 +74,7 @@ function ResultsPage({accessToken}) {
                     <Fragment>
                         <div className='results-page-background'></div>
                         <Title>Hey {usersName}. Your top {resultType} are...</Title>
-                        <TopResult type={resultType} title={topTrack.name} topResultsLabelOnClick={changeSong} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name}) => name))} album={topTrack.album.name}/>
+                        <TopResult type={resultType} title={topTrack.name} topResultsLabelOnClick={changeSong} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name} : {name: string}) => name))} album={topTrack.album.name}/>
                         <ItemList type={resultType} songs={topTracks} onTileClick={changeSong} currentlyPlayingIndex={currentlyPlayingSongIndex}/>
                         <Footer />
                         <MuteButton hoverAction='opaque' onClick={toggleMute}/>
@@ -82,10 +84,6 @@ function ResultsPage({accessToken}) {
             })()}
       </div>
     );
-}
-
-ResultsPage.propTypes = {
-    accessToken: PropTypes.string.isRequired
 }
 
 export default ResultsPage;
