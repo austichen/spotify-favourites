@@ -1,89 +1,57 @@
 // https://stackoverflow.com/questions/7451508/html5-audio-playback-with-fade-in-and-fade-out
-const adjustVolume = async (element : HTMLAudioElement ,newVolume : number,{duration = 1000,easing = swing,interval = 13} = {}) => {
-    const originalVolume = element.volume;
-    const delta = newVolume - originalVolume;
-    if (!delta || !duration || !easing || !interval) {
-        element.volume = newVolume;
-        return Promise.resolve();
-    }
-    const ticks = Math.floor(duration / interval);
-    let tick = 1;
-    return new Promise((resolve) => {
-        const timer = setInterval(() => {
-            element.volume = originalVolume + (
-                easing(tick / ticks) * delta
-            );
-            if (++tick === ticks) {
-                clearInterval(timer);
-                resolve();
-            }
-        }, interval);
-    });
-}
 
 const swing = (p : number) => {
     return 0.5 - Math.cos(p * Math.PI) / 2;
 }
 
-const fadeIn = (player : HTMLAudioElement, isMuted : boolean) => {
-    if (isMuted) {
-        player.muted = true
-        player.play()
-    } else {
-        player.volume = 0
-        player.play()
-        adjustVolume(player, 1.0)
-    }
-}
-
-
 export class AudioPlayer {
-    trackList : string[]
-    numTracks : number
-    currentIndex : number
-    currentPlayer : HTMLAudioElement | null
-    songChangeCallback : ((currentIndex : number) => void) | null
-    isMuted : boolean
+    private trackList : string[]
+    private numTracks : number
+    private currentIndex = 0
+    private currentPlayer : HTMLAudioElement | null = null
+    private songChangeCallback : ((currentIndex : number) => void) | null = null
+    private isMuted : boolean
+    private volume = 0.1
 
     constructor(trackList : string[], isMuted : boolean = false) {
         this.trackList = trackList
         this.numTracks = trackList.length
-        this.currentIndex = 0
-        this.currentPlayer = null
-        this.songChangeCallback = null
         this.isMuted = isMuted
     }
 
-    play(index : number =this.currentIndex) {
+    public play(index : number =this.currentIndex) {
         this.currentIndex = index
         if (this.currentPlayer && !this.currentPlayer.ended) {
             this.currentPlayer.pause()
         }
         this.currentPlayer = new Audio(this.trackList[this.currentIndex])
+        this.currentPlayer.muted = this.isMuted
+        this.currentPlayer.volume = this.volume
+
         if (this.songChangeCallback) {
             this.songChangeCallback(this.currentIndex)
         }
         
-        fadeIn(this.currentPlayer, this.isMuted)
+        this.isMuted ? this.currentPlayer.play() : this.fadeIn()
 
         this.currentPlayer.addEventListener('ended', () => {
             this.play((this.currentIndex + 1) % this.numTracks)
         })
     }
 
-    mute() {
+    public mute() {
         if (this.currentPlayer === null) return;
         this.currentPlayer.muted = true;
         this.isMuted = true
     }
 
-    unmute() {
+    public unmute() {
         if (this.currentPlayer === null) return;
         this.currentPlayer.muted = false;
         this.isMuted = false
     }
 
-    updateTrackList(trackList : string[]) {
+    public updateTrackList(trackList : string[]) {
         if (this.currentPlayer) {
             this.currentPlayer.pause()
             this.currentPlayer = null;
@@ -93,8 +61,41 @@ export class AudioPlayer {
         this.numTracks = this.trackList.length
     }
 
-    setSongChangeCallback(callback : (currentIndex : number) => void) {
+    public setSongChangeCallback(callback : (currentIndex : number) => void) {
         this.songChangeCallback = callback
     }
 
+    private fadeIn () {
+        if (!this.currentPlayer) return;
+
+        this.currentPlayer.volume = 0
+        this.currentPlayer.play()
+        this.adjustVolume(this.volume)
+
+    }
+
+    private async adjustVolume (newVolume : number,{duration = 1000,easing = swing,interval = 13} = {}) {
+        if (!this.currentPlayer) return;
+
+        const originalVolume = this.currentPlayer.volume;
+        const delta = newVolume - originalVolume;
+        if (!delta || !duration || !easing || !interval) {
+            this.currentPlayer.volume = newVolume;
+            return Promise.resolve();
+        }
+        const ticks = Math.floor(duration / interval);
+        let tick = 1;
+        return new Promise((resolve) => {
+            const timer = setInterval(() => {
+                if (!this.currentPlayer) return;
+                this.currentPlayer.volume = originalVolume + (
+                    easing(tick / ticks) * delta
+                );
+                if (++tick === ticks) {
+                    clearInterval(timer);
+                    resolve();
+                }
+            }, interval);
+        });
+    }
 }

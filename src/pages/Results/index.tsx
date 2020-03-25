@@ -58,7 +58,7 @@ const ResultsPage = ({accessToken} : Props) => {
             audioPlayer.play(0)
             setTopArtists(topArtistsRes.items)
 
-            // do this after to improve page-load time
+            // load the rest of the info after page is already active to improve page-load time
             const remainingRequests = [
                 spotifyClient.getTopTracks({timeRange: TIME_RANGES.short_term}),
                 spotifyClient.getTopTracks({timeRange: TIME_RANGES.long_term}),
@@ -80,6 +80,7 @@ const ResultsPage = ({accessToken} : Props) => {
         const spotifyClient = new SpotifyApiClient(accessToken)
         getResults(spotifyClient)
 
+    // eslint-disable-next-line
     }, [accessToken])
 
     useEffect(() => {
@@ -87,6 +88,7 @@ const ResultsPage = ({accessToken} : Props) => {
         if (!topTracks || !topTracks[timeRange]) return;
         audioPlayer.updateTrackList(topTracks[timeRange].map(({preview_url} : {preview_url : string}) => preview_url))
         audioPlayer.play(0)
+        // eslint-disable-next-line
     }, [resultsSettings])
 
     const handleModalClose = (settings : IResultsSettings) => {
