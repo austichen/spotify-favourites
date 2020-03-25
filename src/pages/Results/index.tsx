@@ -1,12 +1,16 @@
 
 import React, {useState, useEffect, Fragment} from 'react';
+
 import {ItemList, TopResult, MuteButton, SettingsIcon, Footer} from '../../components/molecules'
 import SettingsModal from '../../components/organisms/SettingsModal'
 import Title from '../../components/atoms/Title';
+
 import {SpotifyApiClient} from '../../clients/spotifyApi'
 import {AudioPlayer} from '../../clients/audioPlayer'
+
 import {arrayToComaSeparatedString} from '../../utils/helpers'
 import {RESULT_TYPES, TIME_RANGES, IResultsSettings} from '../../utils/constants'
+
 import logo from '../../logo.svg';
 import './Results.css'
 
@@ -46,17 +50,23 @@ const ResultsPage = ({accessToken} : Props) => {
     const [showModal, setShowModal] = useState<boolean>(false)
     
     useEffect(() => {
-        const getResults = async (spotifyClient: SpotifyApiClient) => {
+        const getResults = async () => {
+            // fetch spotify data
             const topTracksPromise = spotifyClient.getTopTracks({timeRange: TIME_RANGES.medium_term})
             const topArtistPromise = spotifyClient.getTopArtists({timeRange: TIME_RANGES.medium_term})
             const userInfoPromise = spotifyClient.getUserInfo()
             const [topTracksRes, topArtistsRes, userInfoRes] = await Promise.all([topTracksPromise, topArtistPromise, userInfoPromise])
+
+            // update state
             setTopTracks({short_term: null, medium_term: topTracksRes.items, long_term: null})
-            setUserInfo(userInfoRes)
-            audioPlayer = new AudioPlayer(topTracksRes.items.map(({preview_url} : {preview_url : string}) => preview_url), audioStatus.isMuted)
-            audioPlayer.setSongChangeCallback((currentSongIndex : number) => setAudioStatus((a: IAudioStatus) => ({...a, currentSongIndex})))
-            audioPlayer.play(0)
             setTopArtists(topArtistsRes.items)
+            setUserInfo(userInfoRes)
+
+            // set up audio player with track info and start playing
+            const trackList = topTracksRes.items.map((track : any):string => track.preview_url)
+            const songChangeCallback = (currentSongIndex : number) => setAudioStatus((a: IAudioStatus) => ({...a, currentSongIndex}))
+            audioPlayer = new AudioPlayer(trackList, audioStatus.isMuted, songChangeCallback)
+            audioPlayer.play(0)
 
             // load the rest of the info after page is already active to improve page-load time
             const remainingRequests = [
@@ -78,7 +88,7 @@ const ResultsPage = ({accessToken} : Props) => {
         }
         
         const spotifyClient = new SpotifyApiClient(accessToken)
-        getResults(spotifyClient)
+        getResults()
 
     // eslint-disable-next-line
     }, [accessToken])
@@ -86,7 +96,7 @@ const ResultsPage = ({accessToken} : Props) => {
     useEffect(() => {
         const {timeRange} = resultsSettings
         if (!topTracks || !topTracks[timeRange]) return;
-        audioPlayer.updateTrackList(topTracks[timeRange].map(({preview_url} : {preview_url : string}) => preview_url))
+        audioPlayer.updateTrackList(topTracks[timeRange].map((track : any):string => track.preview_url))
         audioPlayer.play(0)
         // eslint-disable-next-line
     }, [resultsSettings])

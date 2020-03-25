@@ -1,9 +1,3 @@
-// https://stackoverflow.com/questions/7451508/html5-audio-playback-with-fade-in-and-fade-out
-
-const swing = (p : number) => {
-    return 0.5 - Math.cos(p * Math.PI) / 2;
-}
-
 export class AudioPlayer {
     private trackList : string[]
     private numTracks : number
@@ -13,10 +7,11 @@ export class AudioPlayer {
     private isMuted : boolean
     private volume = 0.1
 
-    constructor(trackList : string[], isMuted : boolean = false) {
+    constructor(trackList : string[], isMuted : boolean = false, songChangeCallback : ((currentIndex : number) => void) | null = null) {
         this.trackList = trackList
         this.numTracks = trackList.length
         this.isMuted = isMuted
+        this.songChangeCallback = songChangeCallback
     }
 
     public play(index : number =this.currentIndex) {
@@ -74,6 +69,7 @@ export class AudioPlayer {
 
     }
 
+    // https://stackoverflow.com/questions/7451508/html5-audio-playback-with-fade-in-and-fade-out
     private async adjustVolume (newVolume : number,{duration = 1000,easing = swing,interval = 13} = {}) {
         if (!this.currentPlayer) return;
 
@@ -98,4 +94,8 @@ export class AudioPlayer {
             }, interval);
         });
     }
+}
+
+const swing = (p : number) => {
+    return 0.5 - Math.cos(p * Math.PI) / 2;
 }
