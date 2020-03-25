@@ -2,14 +2,19 @@ import React from 'react';
 import LoginButton from '../../components/molecules/LoginButton'
 import {Title, Icon} from '../../components/atoms'
 import './Login.css';
+import { IAccessTokenInfo } from '../../utils/constants';
 
-const LoginPage = () => {
+interface Props {
+  loginSuccessCallback : (accessTokenInfo : IAccessTokenInfo) => void
+}
+
+const LoginPage = ({loginSuccessCallback} : Props) => {
   return (
     <div className='page login-page'>
       <div className='content'>
         <div className='main-text'>
           <Title>Check your top artists and tracks, anytime.</Title>
-          <LoginButton />
+          <LoginButton loginCallback={(success : boolean, accessTokenInfo? : IAccessTokenInfo) => success && accessTokenInfo && loginSuccessCallback(accessTokenInfo)}/>
         </div>
         <div className='album-covers'>
           {/*LOVER*/}

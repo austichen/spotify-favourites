@@ -19,3 +19,9 @@ export interface IResultsSettings {
     type: ResultsType
     timeRange: TIME_RANGES
 }
+
+export interface IAccessTokenInfo {
+    accessToken: string,
+    expiryTimestamp: number
+  }
+  

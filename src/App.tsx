@@ -1,22 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { LoginPage, ResultsPage } from './pages';
 import {parseUrlHash} from './utils/helpers'
+import {IAccessTokenInfo} from './utils/constants'
 import './App.css';
 
-interface IAccessTokenInfo {
-  accessToken: string,
-  expiryTimestamp: number
-}
-
-const checkLoggedIn = (): boolean => {
-  if (window.location.hash) {
-    const {access_token, token_type, expires_in} : {access_token: string | null, token_type: string | null, expires_in : number | null} = parseUrlHash(window.location.hash)
-    if (access_token && token_type && expires_in) {
-      return true;
-    }
-  }
-  return false;
-}
 
 const getTokenInfo = (): IAccessTokenInfo => {
     const {access_token, expires_in} = parseUrlHash(window.location.hash)
@@ -38,17 +25,17 @@ const App : React.FC = () => {
   const [accessToken, setAccessToken] = useState<string | null>(null)
 
   useEffect(() => {
-    const loggedIn = checkLoggedIn()
-    setIsLoggedIn(loggedIn)
-    if (loggedIn) {
-      const accessTokenInfo = getTokenInfo()
-      cleanHashFromHistory()
-      // updateLocalStoreToken(accessTokenInfo) // disable auto-login
-      setAccessToken(accessTokenInfo.accessToken)
+    if (window && window.opener) { // is a popup
+      window.opener.onLogin()
     }
   }, [])
 
-  return isLoggedIn && accessToken ? <ResultsPage accessToken={accessToken} /> : <LoginPage />
+  const onLoginSuccess = (accessToken : IAccessTokenInfo) => {
+    setIsLoggedIn(true)
+    setAccessToken(accessToken.accessToken)
+  }
+
+  return isLoggedIn && accessToken ? <ResultsPage accessToken={accessToken} /> : <LoginPage loginSuccessCallback={onLoginSuccess}/>
 }
 
 export default App;
