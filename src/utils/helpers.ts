@@ -1,3 +1,5 @@
+import {ISpotifyTrack, ISpotifyArtist} from '../clients/spotifyApi'
+
 export const parseUrlHash = (urlHash : string) => {
     const params : any = {}
     urlHash.substring(1).split('&').forEach((param: string) => {
@@ -63,4 +65,25 @@ export const getAverageImgColour = (imgElem: HTMLImageElement) => {
 
 
     return rgb;
+}
+
+interface IArtistTrackMapping {
+    [key: string] : string | null
+}
+
+export const mapArtistsToTracks = async (artists : ISpotifyArtist[], tracks: ISpotifyTrack[]) => {
+    return new Promise<IArtistTrackMapping>(resolve=> {
+        const artistTracks : IArtistTrackMapping = {}
+        artists.forEach(({id}) => {
+            artistTracks[id] = null
+        })
+    
+        tracks.forEach(track => {
+            const artistId = track.artists[0].id
+            if (Object.keys(artistTracks).includes(artistId)) {
+                artistTracks[artistId] = track.preview_url
+            }
+        })
+        resolve(artistTracks)
+    })
 }

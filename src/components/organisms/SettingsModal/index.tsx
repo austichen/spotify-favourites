@@ -44,7 +44,7 @@ const SettingsModal = ({isOpen, onClose = () => {}, resultsSettings} : Props) =>
             <Label>Result type</Label>
             <RadioGroup aria-label="result-type" name="result-type" value={settings.type} onChange={handleResultTypeChange}>
                 <FormControlLabel value={RESULT_TYPES.tracks} control={<Radio />} label={RESULT_TYPES.tracks} />
-                <FormControlLabel disabled value={RESULT_TYPES.artists} control={<Radio />} label={RESULT_TYPES.artists} />
+                <FormControlLabel value={RESULT_TYPES.artists} control={<Radio />} label={RESULT_TYPES.artists} />
             </RadioGroup>
             <Label>Time range</Label>
             <RadioGroup aria-label="time-range" name="time-range" value={settings.timeRange} onChange={handleTimeRangeChange}>

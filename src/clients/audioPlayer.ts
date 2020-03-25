@@ -34,6 +34,12 @@ export class AudioPlayer {
         })
     }
 
+    public pause() {
+        if (this.currentPlayer) {
+            this.currentPlayer.pause()
+        }
+    }
+
     public mute() {
         if (this.currentPlayer === null) return;
         this.currentPlayer.muted = true;

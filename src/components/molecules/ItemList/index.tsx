@@ -26,7 +26,7 @@ const ItemList = ({type, songs, limit = 20, onTileClick = () => {}, currentlyPla
                 }
                   return <ItemTile type={type} {...trackDetails} onClick={onTileClick} index={index} currentlyPlayingIndex={currentlyPlayingIndex} />
               } else {
-                  return <div>xd</div>
+                  return <ItemTile type={type} title={song.name} onClick={onTileClick} imgUrl={song.images[2].url} index={index} currentlyPlayingIndex={currentlyPlayingIndex} />
               }
           })}
           <ShowMoreLink onClick={() => setShowMore(!showMore)} />

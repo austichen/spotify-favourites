@@ -31,10 +31,6 @@ interface IResultGroups<T> {
 
 let audioPlayer : AudioPlayer;
 
-const changeSong = (songIndex : number) => {
-    audioPlayer.play(songIndex)
-}
-
 const toggleMute = (audioStatus : IAudioStatus, setAudioStatus: any) => {
     const {isMuted} = audioStatus
     isMuted ? audioPlayer.unmute() : audioPlayer.mute()
@@ -99,12 +95,17 @@ const ResultsPage = ({accessToken} : Props) => {
     }, [accessToken])
 
     useEffect(() => {
-        const {timeRange} = resultsSettings
+        const {timeRange, type} = resultsSettings
         if (!topTracks || !topTracks[timeRange]) return;
         const tracks = topTracks[timeRange]
         if (tracks === null) return;
-        audioPlayer.updateTrackList(tracks.map((track) => track.preview_url))
-        audioPlayer.play(0)
+
+        if (type === RESULT_TYPES.tracks) {
+            audioPlayer.updateTrackList(tracks.map((track) => track.preview_url))
+            audioPlayer.play(0)
+        } else {
+            audioPlayer.pause()
+        }
         // eslint-disable-next-line
     }, [resultsSettings])
 
@@ -115,6 +116,14 @@ const ResultsPage = ({accessToken} : Props) => {
        }
     }
 
+    const changeSong = (songIndex : number) => {
+        if (resultsSettings.type === RESULT_TYPES.tracks) {
+            audioPlayer.play(songIndex)
+        } else {    // no songs for now
+            setAudioStatus({...audioStatus, currentSongIndex: songIndex})
+        }
+    }    
+
     
     return (
       <div className='page results-page'>
@@ -124,17 +133,40 @@ const ResultsPage = ({accessToken} : Props) => {
                 } else {
                     const {type, timeRange} = resultsSettings
                     const topBannerIndex = audioStatus.currentSongIndex === -1 ? 0 : audioStatus.currentSongIndex
-                    const tracks = topTracks[timeRange]
-                    if (!tracks) return null
-                    const topTrack = tracks[topBannerIndex]
+                    let topResultInfo, listItems
+                    if (resultsSettings.type === RESULT_TYPES.tracks) {
+                        const tracks = topTracks[timeRange]
+                        if (!tracks) return null
+                        const topTrack = tracks[topBannerIndex]
+                        topResultInfo = {
+                            rank: topBannerIndex + 1,
+                            title: topTrack.name,
+                            spotifyUrl: topTrack.external_urls.spotify,
+                            imgUrl: topTrack.album.images[0].url,
+                            artist: arrayToComaSeparatedString(topTrack.artists.map(({name} : {name: string}) => name)),
+                            album: topTrack.album.name
+                        }
+                        listItems = tracks
+                    } else {
+                        const artists = topArtists[timeRange]
+                        if (!artists) return null
+                        const topArtist = artists[topBannerIndex]
+                        topResultInfo = {
+                            rank: topBannerIndex + 1,
+                            title: topArtist.name,
+                            spotifyUrl: topArtist.external_urls.spotify,
+                            imgUrl: topArtist.images[0].url
+                        }
+                        listItems = artists
+                    }
                     const usersName = userInfo.display_name.split(' ')[0]
                     return (
                     <Fragment>
                         <div className='results-page-background'></div>
                         <SettingsModal resultsSettings={resultsSettings} isOpen={showModal} onClose={handleModalClose} />
                         <Title>Hey {usersName}. Your top {type} are...</Title>
-                        <TopResult type={type} rank={topBannerIndex + 1} title={topTrack.name} spotifyUrl={topTrack.external_urls.spotify} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name} : {name: string}) => name))} album={topTrack.album.name}/>
-                        <ItemList type={type} songs={tracks} onTileClick={changeSong} currentlyPlayingIndex={audioStatus.currentSongIndex}/>
+                        <TopResult type={type} {...topResultInfo} />
+                        <ItemList type={type} songs={listItems} onTileClick={changeSong} currentlyPlayingIndex={audioStatus.currentSongIndex}/>
                         <div className="settings-area">
                             <SettingsIcon hoverAction='opaque' onClick={() => setShowModal(true)}/>
                             <MuteButton isMuted={audioStatus.isMuted} hoverAction='opaque' onClick={() => toggleMute(audioStatus, setAudioStatus)}/>
