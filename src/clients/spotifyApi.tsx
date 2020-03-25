@@ -14,9 +14,9 @@ export class SpotifyApiClient {
         this.accessToken = accessToken;
     }
 
-    private async makeRequest(url : string) {
+    private async makeRequest<ResponseType>(url : string) {
         const res = await fetch(url, {headers: {Authorization : `Bearer ${this.accessToken}`}})
-        const jsonResponse = await res.json()
+        const jsonResponse: ResponseType = await res.json()
         return jsonResponse
     }
 
@@ -34,7 +34,7 @@ export class SpotifyApiClient {
             URL += `&time_range=${timeRange}`
         }
 
-        return await this.makeRequest(URL)
+        return await this.makeRequest<ISpotifyResultList<ISpotifyArtist>>(URL)
     }
 
     public async getTopTracks(queryParams = {}) {
@@ -47,6 +47,63 @@ export class SpotifyApiClient {
             URL += `&time_range=${timeRange}`
         }
 
-        return await this.makeRequest(URL)
+        return await this.makeRequest<ISpotifyResultList<ISpotifyTrack>>(URL)
     }
+}
+
+export interface ISpotifyArtist {    
+    external_urls: {
+        spotify: string
+    }
+    followers: {
+        href: string | null
+        total : number
+    }
+    genres: string[]
+    href : string
+    id : string
+    images : {height: number, url: string, width: number}[]
+    name: string
+    popularity: string
+    type: string
+    uri: string
+}
+
+interface ISpotifyArtistSummary {
+    external_urls: {
+        spotify: string
+    }
+    href: string
+    id: string
+    name: string
+    type: ISpotifyArtist
+    uri: string
+}
+
+export interface ISpotifyTrack {
+    album: {
+        album_type: string
+        external_urls: {
+            spotify: string
+        }
+        images : {height: number, url: string, width: number}[]
+        name: string
+        [key: string] : any
+    }
+    artists: ISpotifyArtistSummary[]
+    external_urls: {
+        spotify: string
+    }
+    href: string
+    id: string
+    name: string
+    popularity: number
+    preview_url: string
+    type: string
+    uri: string
+    [key: string] : any
+}
+
+export interface ISpotifyResultList<T> {
+    items: T[]
 }

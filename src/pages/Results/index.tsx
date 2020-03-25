@@ -5,7 +5,7 @@ import {ItemList, TopResult, MuteButton, SettingsIcon, Footer} from '../../compo
 import SettingsModal from '../../components/organisms/SettingsModal'
 import Title from '../../components/atoms/Title';
 
-import {SpotifyApiClient} from '../../clients/spotifyApi'
+import {SpotifyApiClient, ISpotifyResultList, ISpotifyArtist, ISpotifyTrack} from '../../clients/spotifyApi'
 import {AudioPlayer} from '../../clients/audioPlayer'
 
 import {arrayToComaSeparatedString} from '../../utils/helpers'
@@ -23,10 +23,10 @@ interface IAudioStatus {
     isMuted : boolean
 }
 
-interface IResultGroups {
-    short_term : any
-    medium_term : any
-    long_term : any
+interface IResultGroups<T> {
+    short_term : T | null
+    medium_term : T | null
+    long_term : T | null
 }
 
 let audioPlayer : AudioPlayer;
@@ -43,8 +43,8 @@ const toggleMute = (audioStatus : IAudioStatus, setAudioStatus: any) => {
 
 const ResultsPage = ({accessToken} : Props) => {
     const [userInfo, setUserInfo] = useState<any | null>(null)
-    const [topTracks, setTopTracks] = useState<IResultGroups | null>(null)
-    const [topArtists, setTopArtists] = useState<any | null>(null)
+    const [topTracks, setTopTracks] = useState<IResultGroups<ISpotifyTrack[]> | null>(null)
+    const [topArtists, setTopArtists] = useState<IResultGroups<ISpotifyArtist[]> | null>(null)
     const [resultsSettings, setResultsSettings] = useState<IResultsSettings>({type: RESULT_TYPES.tracks, timeRange: TIME_RANGES.medium_term})
     const [audioStatus, setAudioStatus] = useState<IAudioStatus>({currentSongIndex: -1, isMuted: process.env.REACT_APP_ENV === 'prod' ? false : true}) // so you don't get spammed with music in dev
     const [showModal, setShowModal] = useState<boolean>(false)
@@ -55,21 +55,26 @@ const ResultsPage = ({accessToken} : Props) => {
             const topTracksPromise = spotifyClient.getTopTracks({timeRange: TIME_RANGES.medium_term})
             const topArtistPromise = spotifyClient.getTopArtists({timeRange: TIME_RANGES.medium_term})
             const userInfoPromise = spotifyClient.getUserInfo()
-            const [topTracksRes, topArtistsRes, userInfoRes] = await Promise.all([topTracksPromise, topArtistPromise, userInfoPromise])
+            const [topTracksRes, topArtistsRes, userInfoRes] = await Promise.all<ISpotifyResultList<ISpotifyTrack>, ISpotifyResultList<ISpotifyArtist>, any>([topTracksPromise, topArtistPromise, userInfoPromise])
 
             // update state
             setTopTracks({short_term: null, medium_term: topTracksRes.items, long_term: null})
-            setTopArtists(topArtistsRes.items)
+            setTopArtists({short_term: null, medium_term: topArtistsRes.items, long_term: null})
             setUserInfo(userInfoRes)
 
             // set up audio player with track info and start playing
-            const trackList = topTracksRes.items.map((track : any):string => track.preview_url)
+            const trackList = topTracksRes.items.map((track) => track.preview_url)
             const songChangeCallback = (currentSongIndex : number) => setAudioStatus((a: IAudioStatus) => ({...a, currentSongIndex}))
             audioPlayer = new AudioPlayer(trackList, audioStatus.isMuted, songChangeCallback)
             audioPlayer.play(0)
 
             // load the rest of the info after page is already active to improve page-load time
-            const remainingRequests = [
+            const remainingRequests : [
+                Promise<ISpotifyResultList<ISpotifyTrack>>,
+                Promise<ISpotifyResultList<ISpotifyTrack>>,
+                Promise<ISpotifyResultList<ISpotifyArtist>>,
+                Promise<ISpotifyResultList<ISpotifyArtist>>,
+            ] = [
                 spotifyClient.getTopTracks({timeRange: TIME_RANGES.short_term}),
                 spotifyClient.getTopTracks({timeRange: TIME_RANGES.long_term}),
                 spotifyClient.getTopArtists({timeRange: TIME_RANGES.short_term}),
@@ -96,7 +101,9 @@ const ResultsPage = ({accessToken} : Props) => {
     useEffect(() => {
         const {timeRange} = resultsSettings
         if (!topTracks || !topTracks[timeRange]) return;
-        audioPlayer.updateTrackList(topTracks[timeRange].map((track : any):string => track.preview_url))
+        const tracks = topTracks[timeRange]
+        if (tracks === null) return;
+        audioPlayer.updateTrackList(tracks.map((track) => track.preview_url))
         audioPlayer.play(0)
         // eslint-disable-next-line
     }, [resultsSettings])
@@ -117,7 +124,9 @@ const ResultsPage = ({accessToken} : Props) => {
                 } else {
                     const {type, timeRange} = resultsSettings
                     const topBannerIndex = audioStatus.currentSongIndex === -1 ? 0 : audioStatus.currentSongIndex
-                    const topTrack = topTracks[timeRange][topBannerIndex]
+                    const tracks = topTracks[timeRange]
+                    if (!tracks) return null
+                    const topTrack = tracks[topBannerIndex]
                     const usersName = userInfo.display_name.split(' ')[0]
                     return (
                     <Fragment>
@@ -125,7 +134,7 @@ const ResultsPage = ({accessToken} : Props) => {
                         <SettingsModal resultsSettings={resultsSettings} isOpen={showModal} onClose={handleModalClose} />
                         <Title>Hey {usersName}. Your top {type} are...</Title>
                         <TopResult type={type} rank={topBannerIndex + 1} title={topTrack.name} spotifyUrl={topTrack.external_urls.spotify} imgUrl={topTrack.album.images[0].url} artist={arrayToComaSeparatedString(topTrack.artists.map(({name} : {name: string}) => name))} album={topTrack.album.name}/>
-                        <ItemList type={type} songs={topTracks[timeRange]} onTileClick={changeSong} currentlyPlayingIndex={audioStatus.currentSongIndex}/>
+                        <ItemList type={type} songs={tracks} onTileClick={changeSong} currentlyPlayingIndex={audioStatus.currentSongIndex}/>
                         <div className="settings-area">
                             <SettingsIcon hoverAction='opaque' onClick={() => setShowModal(true)}/>
                             <MuteButton isMuted={audioStatus.isMuted} hoverAction='opaque' onClick={() => toggleMute(audioStatus, setAudioStatus)}/>
