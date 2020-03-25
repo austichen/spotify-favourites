@@ -6,28 +6,26 @@ import './ItemList.css'
 
 export interface Props {
     type: ResultsType,
-    songs: any[],
+    items: any[],
     limit?: number,
     onTileClick?: songIndexCallbackType,
     currentlyPlayingIndex: number
 }
 
-const ItemList = ({type, songs, limit = 20, onTileClick = () => {}, currentlyPlayingIndex} : Props) => {
+const ItemList = ({type, items: songs, limit = 20, onTileClick = () => {}, currentlyPlayingIndex} : Props) => {
     const [showMore, setShowMore] = useState(false)
   return (
       <div className='item-list'>
           {songs.slice(0, showMore ? songs.length : limit).map((song, index) => {
-              if (type === RESULT_TYPES.tracks) {
-                const trackDetails = {
+                const trackDetails : any = {
                     title: song.name,
-                    imgUrl: song.album.images[2].url,
-                    artist: arrayToComaSeparatedString(song.artists.map(({name} : {name: string}) => name)),
-                    album: song.album.name
+                    imgUrl: type === RESULT_TYPES.tracks ? song.album.images[2].url : song.images[2].url,
                 }
-                  return <ItemTile type={type} {...trackDetails} onClick={onTileClick} index={index} currentlyPlayingIndex={currentlyPlayingIndex} />
-              } else {
-                  return <ItemTile type={type} title={song.name} onClick={onTileClick} imgUrl={song.images[2].url} index={index} currentlyPlayingIndex={currentlyPlayingIndex} />
-              }
+              if (type === RESULT_TYPES.tracks) {
+                    trackDetails.artist = arrayToComaSeparatedString(song.artists.map(({name} : {name: string}) => name))
+                    trackDetails.album = song.album.name
+                }
+                return <ItemTile type={type} {...trackDetails} onClick={onTileClick} index={index} currentlyPlayingIndex={currentlyPlayingIndex} />
           })}
           <ShowMoreLink onClick={() => setShowMore(!showMore)} />
       </div>

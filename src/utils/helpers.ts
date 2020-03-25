@@ -67,7 +67,7 @@ export const getAverageImgColour = (imgElem: HTMLImageElement) => {
     return rgb;
 }
 
-interface IArtistTrackMapping {
+export interface IArtistTrackMapping {
     [key: string] : string | null
 }
 
@@ -82,7 +82,14 @@ export const mapArtistsToTracks = async (artists : ISpotifyArtist[], tracks: ISp
             const artistId = track.artists[0].id
             if (Object.keys(artistTracks).includes(artistId)) {
                 artistTracks[artistId] = track.preview_url
+                return
             }
+            const featuredArtistIds = track.artists.slice(1, track.artists.length).map(artist => artist.id)
+            featuredArtistIds.forEach(artistId => {
+                if (Object.keys(artistTracks).includes(artistId) && artistTracks[artistId] === null) {
+                    artistTracks[artistId] = track.preview_url
+                }
+            })
         })
         resolve(artistTracks)
     })
