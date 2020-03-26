@@ -1,8 +1,8 @@
 import React from 'react';
 import LoginButton from '../../components/molecules/LoginButton'
 import {Title, Icon} from '../../components/atoms'
-import './Login.css';
 import { IAccessTokenInfo } from '../../utils/constants';
+import './Login.css';
 
 interface Props {
   loginSuccessCallback : (accessTokenInfo : IAccessTokenInfo) => void
