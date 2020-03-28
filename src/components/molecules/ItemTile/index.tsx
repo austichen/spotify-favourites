@@ -14,18 +14,15 @@ export interface Props {
     currentlyPlayingIndex: number
 }
 
-const renderInfoSection = (type : ResultsType, title : string, artist : string | undefined, album : string | undefined) => (
-    <div className='tile-info-section'>
-        <Label>{title}</Label>
-        {type === RESULT_TYPES.tracks && <SubLabel>{`${artist} | ${album}`}</SubLabel>}
-    </div>
-)
-
 const ItemTile = ({type, index, currentlyPlayingIndex, title, imgUrl, artist, album, onClick = () => {}} : Props) => {
   return (
       <div className={`item-tile${index === currentlyPlayingIndex ? ' playing' : ''}`} onClick={() => onClick(index)}>
+          <Label>{index+1}</Label>
           <Icon url={imgUrl} />
-          {renderInfoSection(type, title, artist, album)}
+          <div className='tile-info-section'>
+            <Label>{title}</Label>
+            {type === RESULT_TYPES.tracks && <SubLabel>{`${artist} | ${album}`}</SubLabel>}
+          </div>
       </div>
   )
 }
